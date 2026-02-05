@@ -10,15 +10,6 @@ from tqdm import tqdm
 
 #Chargement des données
 dataset_path = "malaria_hematie_dataset"
-import numpy
-import os
-import matplotlib.pyplot as plt
-import tensorflow.keras as keras
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras import models
-
-#Chargement des données
-dataset_path = "malaria_hematie_dataset"
 
 #Creation de imagedatagenerator pour augmenter les données
 train_datagen = ImageDataGenerator(
