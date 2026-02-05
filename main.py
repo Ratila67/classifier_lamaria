@@ -1,11 +1,11 @@
 import numpy
 import os
 import matplotlib.pyplot as plt
-import keras
+import tensorflow.keras as keras
 from keras.preprocessing import image
-from keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from sklearn.model_selection import train_test_split
-from keras import models
+from tensorflow.keras import models
 from tqdm import tqdm
 
 #Chargement des données
@@ -63,6 +63,12 @@ x_train, x_test, y_train, y_test = train_test_split(images, labels, test_size=0.
 train_generator = train_datagen.flow(x_train, y_train, batch_size=32)
 test_generator = test_datagen.flow(x_test, y_test, batch_size=32)
 
+sample_image = x_train[0]
+plt.imshow(sample_image)
+plt.show()
+
+sample_label = y_train[0]
+print("Label de l'image sample:", sample_label)
 #Creation du modele
 mon_modele_malaria = models.Sequential(
     [
