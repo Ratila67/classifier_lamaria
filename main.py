@@ -40,6 +40,53 @@ labels = numpy.array(labels)
 print("Dimensions des images:", images.shape)
 print("Dimensions des labels:", labels.shape)
 
-#afficher les premieres images et labels
-print("Premieres images:", images[0])
-print("Premieres labels:", labels[0])
+print("Nombre d'images total chargées:", len(images))
+
+images = images / 255 #normalisation des images
+
+#Ici on sépare le jeu de données en train et test
+x_train, x_test, y_train, y_test = train_test_split(images, labels, test_size=0.2, random_state=42)
+
+print("Train set size:", len(x_train))
+print("Test set size:", len(x_test))
+
+y_train = keras.utils.to_categorical(y_train, 2) #conversion des labels en cat pour 2 classes
+y_test = keras.utils.to_categorical(y_test, 2)
+
+#Creation du modele
+base_model = VGG16(weights='imagenet', input_shape=(1024, 1024, 3)) #VGG16 modèle pré-entraîné
+
+mon_modele_malaria = models.Sequential(
+    [
+        keras.input(shape=(1024, 1024, 3)),
+        keras.layers.Conv2D(100, kernel_size=(3,3), strides=(1,1), activation="relu"),#convolution et activation
+        keras.layers.MaxPool2D(pool_size=(2,2)), #pooling
+
+        keras.layers.Conv2D(100, kernel_size=(3,3), strides=(1,1), activation="relu"),#convolution et activation
+        keras.layers.MaxPool2D(pool_size=(2,2)), #pooling
+
+        #Ensuite on fait la connection avec un vecteur flatten
+
+        keras.layers.Flatten(),
+        keras.layers.Dense(2, activation='softmax')
+    ]
+)
+
+mon_modele_malaria.summary()
+
+mon_modele_malaria.compile(loss='categorical_crossentropy', optimizer='adam')
+
+mon_modele_malaria.fit(x_train, y_train, epochs=10, batch_size=32, validation_data=(x_test, y_test))
+
+plt.figure(figsize=(10, 5))
+plt.plot(mon_modele_malaria.history.history.history['loss'])
+plt.title("Loss pendant l'entraînement")
+plt.show()
+
+mon_modele_malaria.save('mon_modele_malaria.h5')
+
+#Test du modele
+test_loss = mon_modele_malaria.evaluate(x_test, y_test)
+print("Test loss:", test_loss)
+
+#commentaire de test pour le commit
