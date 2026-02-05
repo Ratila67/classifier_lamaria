@@ -50,9 +50,6 @@ x_train, x_test, y_train, y_test = train_test_split(images, labels, test_size=0.
 print("Train set size:", len(x_train))
 print("Test set size:", len(x_test))
 
-y_train = keras.utils.to_categorical(y_train, 2) #conversion des labels en cat pour 2 classes
-y_test = keras.utils.to_categorical(y_test, 2)
-
 #Creation du modele
 base_model = VGG16(weights='imagenet', input_shape=(1024, 1024, 3)) #VGG16 modèle pré-entraîné
 
@@ -68,13 +65,13 @@ mon_modele_malaria = models.Sequential(
         #Ensuite on fait la connection avec un vecteur flatten
 
         keras.layers.Flatten(),
-        keras.layers.Dense(2, activation='softmax')
+        keras.layers.Dense(2, activation='sigmoid')
     ]
 )
 
 mon_modele_malaria.summary()
 
-mon_modele_malaria.compile(loss='categorical_crossentropy', optimizer='adam')
+mon_modele_malaria.compile(loss='binary_crossentropy', optimizer='adam')
 
 mon_modele_malaria.fit(x_train, y_train, epochs=10, batch_size=32, validation_data=(x_test, y_test))
 
