@@ -1,7 +1,7 @@
 import numpy
 import os
 import matplotlib.pyplot as plt
-from keras.preprocessing.image import load_img, img_to_array
+from keras.preprocessing import image
 from keras.applications.vgg16 import VGG16, preprocess_input, decode_predictions
 from tqdm import tqdm
 
